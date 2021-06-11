@@ -108,18 +108,18 @@ local function StatusCheck()
             term.setBackgroundColor(colors.lightBlue)
             term.setCursorPos(1,3)
             if turbine.getProductionRate() >= 100 then
-                print("Turbine Status: Probably Spinning")
+                print("Turbine Status: Online")
             elseif turbine.getProductionRate() <= 99 then
-                print("Turbine Status: idk lol go look at it") 
+                print("Turbine Status: Low Generation!") 
             elseif turbine.getProductionRate() <= 1 then
-                print("Turbine Status: Definently not spinning")
+                print("Turbine Status: Offline")
             end
             print("Steam Capacity: "..turbine.getSteamCapacity().."mB")
             print("Current Steam: "..turbine.getSteam().."mB")
             print("Flow Rate: "..turbine.getFlowRate().."mB/t")
             print("Energy Production: "..turbine.getProductionRate().."FE/t")
             newLine()
-            print("Turbine Failsafe: work in progress")
+            print("Turbine Failsafe: WIP")
         elseif turbine == nil and turbineStatusTab == true then
             term.clear()
             menuBar()
@@ -143,11 +143,13 @@ local function reactorFailsafe()
                  reactor.scram()
                  if chatbox ~= nil then
                     term.setCursorPos(1,18)
-                    print("WARNING: Reactor at critical temps, shutting down")
-                    chatbox.sendMessage("WARNING: Reactor temp at critical levels, shutting down") 
+                    term.setBackgroundColor(colors.red)
+                    print("[WARNING] Reactor temp at critical levels, failsafe has been activated!")
+                    chatbox.sendMessage("§4[WARNING] §cReactor temp at critical levels, failsafe has been activated!") 
                  else
                      term.setCursorPos(1,18)
-                     print("WARNING: Reactor at critical temps, shutting down")
+                     term.setBackgroundColor(colors.red)
+                     print("[WARNING] Reactor temp at critical levels, failsafe has been activated!")
                  end
                  break
             end
