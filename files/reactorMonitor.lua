@@ -141,32 +141,29 @@ end
 
 -- Shuts down the reactor when above 1200K
 local function reactorFailsafe()
-    while true do
-        if reactorFailsafe ==  true then
-            sleep(0.1) 
-            if reactor.getTemperature() >= 1200 then
-                 reactor.scram()
-                 if chatbox ~= nil then
-                    chatbox.sendMessage("WARNING: Reactor temp at critical levels, shutting down")
-                    while true do
-                        if reactorStatusTab == true and reactorFailsafe == true then
-                            term.setCursorPos(1,18)
-                            print("WARNING: Reactor at critical temps, shutting down")
-                            sleep(0.1)
-                        end
-                    end
-                 else
-                    while true do
-                        if reactorStatusTab == true and reactorFailsafe == true then
-                            term.setCursorPos(1,18)
-                            print("WARNING: Reactor at critical temps, shutting down")
-                            sleep(0.1)
-                        end
-                    end
-                end
-            end
+    while true do 
+        if reactor.getTemperature() >= 1200 and reactorFailsafe == true then
+            reactor.scram()
+            if chatbox ~= nil then
+               chatbox.sendMessage("WARNING: Reactor temp at critical levels, shutting down")
+               while true do
+                   if reactorStatusTab == true and reactorFailsafe == true then
+                       term.setCursorPos(1,18)
+                       print("WARNING: Reactor at critical temps, shutting down")
+                       sleep(0.1)
+                   end
+               end
+            else
+               while true do
+                   if reactorStatusTab == true and reactorFailsafe == true then
+                       term.setCursorPos(1,18)
+                       print("WARNING: Reactor at critical temps, shutting down")
+                       sleep(0.1)
+                   end
+               end
+           end
         else return end
-    sleep(0.1)
+        sleep(0.1)
     end
 end
 
