@@ -6,6 +6,7 @@ local reactorStatusTab = true
 local turbineStatusTab = false
 local debugMode = false
 
+-- Turbine Detection
 if peripheral.find("peripheralProxy:turbine") ~= nil then
     turbine = peripheral.find("peripheralProxy:turbine")
 else
@@ -13,12 +14,14 @@ else
     sleep(1)
 end
 
+-- Fission Reactor Detection
 if peripheral.find("peripheralProxy:fissionReactor") ~= nil then
     reactor = peripheral.find("peripheralProxy:fissionReactor")
 else
     error("Fission Reactor not found, this *is* a reactor program y'know")
 end
 
+-- ChatBox Detection
 if peripheral.find("chatBox") ~= nil then
     chatbox = peripheral.find("chatBox")
 else
@@ -26,11 +29,13 @@ else
     sleep(1)
 end
 
+-- Adds a blank line
 function newLine()
     xPos, yPos = term.getCursorPos()
     term.setCursorPos(1,(yPos + 1))
 end
 
+-- Mouse clicking routine (currently only switches between tabs)
 function mouseClick()
     while true do
         local event,button,x,y = os.pullEvent("mouse_click")
@@ -47,6 +52,8 @@ function mouseClick()
     end
 end
 
+-- Updates the background color on the reactor tab
+-- based on status
 local function backgroundColor()
     if reactor.getStatus() == false then
     term.setBackgroundColor(colors.red)
@@ -55,6 +62,7 @@ local function backgroundColor()
     end 
 end 
 
+-- Draws the menu bar on the top of the screen
 local function menuBar()
     term.setBackgroundColor(colors.gray)
     term.setCursorPos(1,1)
@@ -62,68 +70,71 @@ local function menuBar()
     print("[Reactor] [Turbine] [Etc..]")
 end
 
+-- Prints the status of both the reactor and turbine
 local function StatusCheck()
     while true do
-    if reactorStatusTab == true then
-        term.clear()
-        menuBar()
-        paintutils.drawImage(image,28,4 )
-        term.setCursorPos(1,3) 
-        backgroundColor() 
-        if reactor.getStatus() == true then
-            print("Reactor Status: Online")
-        else
-            print("Reactor Status: Offline")
+        -- Reactor Tab Info
+        if reactorStatusTab == true then
+            term.clear()
+            menuBar()
+            paintutils.drawImage(image,28,4 )
+            term.setCursorPos(1,3) 
+            backgroundColor() 
+            if reactor.getStatus() == true then
+                print("Reactor Status: Online")
+            else
+                print("Reactor Status: Offline")
+            end 
+            print("Reactor Temp: "..math.floor(reactor.getTemperature()).."K" )
+            print("Reactor Damage: "..reactor.getDamagePercent().."%") 
+            print("Burn Rate: "..reactor.getBurnRate().."mB/t")
+            print("Heating Rate: "..reactor.getHeatingRate().." mB/t" )
+            print("Coolant Level: "..math.floor(math.abs(reactor.getCoolantFilledPercentage() * 100)).."%") 
+            newLine() 
+            print("E - Toggle Reactor")
+            print("F - Toggle Failsafe") 
+            newLine()
+            if failsafe == true then
+                print("Reactor Failsafe: ACTIVE")
+            else
+                print("Reactor Failsafe: INACTIVE")
+            end  
         end 
-        print("Reactor Temp: "..math.floor(reactor.getTemperature()).."K" )
-        print("Reactor Damage: "..reactor.getDamagePercent().."%") 
-        print("Burn Rate: "..reactor.getBurnRate().."mB/t")
-        print("Heating Rate: "..reactor.getHeatingRate().." mB/t" )
-        print("Coolant Level: "..math.floor(math.abs(reactor.getCoolantFilledPercentage() * 100)).."%") 
-        newLine() 
-        print("E - Toggle Reactor")
-        print("F - Toggle Failsafe") 
-        newLine()
-        if failsafe == true then
-            print("Reactor Failsafe: ACTIVE")
-        else
-             print("Reactor Failsafe: INACTIVE")
+        -- Turbine Tab Info
+        if turbineStatusTab == true and turbine ~= nil then
+            term.clear()
+            menuBar()
+            paintutils.drawImage(image2,37,5)
+            term.setBackgroundColor(colors.lightBlue)
+            term.setCursorPos(1,3)
+            if turbine.getProductionRate() >= 100 then
+                print("Turbine Status: Probably Spinning")
+            elseif turbine.getProductionRate() <= 99 then
+                print("Turbine Status: idk lol go look at it") 
+            elseif turbine.getProductionRate() <= 1 then
+                print("Turbine Status: Definently not spinning")
+            end
+            print("Steam Capacity: "..turbine.getSteamCapacity().."mB")
+            print("Current Steam: "..turbine.getSteam().."mB")
+            print("Flow Rate: "..turbine.getFlowRate().."mB/t")
+            print("Energy Production: "..turbine.getProductionRate().."FE/t")
+            newLine()
+            print("Turbine Failsafe: work in progress")
+        elseif turbine == nil and turbineStatusTab == true then
+            term.clear()
+            menuBar()
+            paintutils.drawImage(errorimage,1,8)
+            term.setBackgroundColor(colors.lightBlue)
+            term.setCursorPos(1,3)
+            print("Running without turbine integration!")
+            print("Connect turbine to see status!")
+            print("(If this message is printed in error, contact us!)")
         end
-        
-    end 
-    if turbineStatusTab == true and turbine ~= nil then
-        term.clear()
-        menuBar()
-        paintutils.drawImage(image2,37,5)
-        term.setBackgroundColor(colors.lightBlue)
-        term.setCursorPos(1,3)
-        if turbine.getProductionRate() >= 100 then
-            print("Turbine Status: Probably Spinning")
-        elseif turbine.getProductionRate() <= 99 then
-            print("Turbine Status: idk lol go look at it") 
-        elseif turbine.getProductionRate() <= 1 then
-            print("Turbine Status: Definently not spinning")
-        end
-        print("Steam Capacity: "..turbine.getSteamCapacity().."mB")
-        print("Current Steam: "..turbine.getSteam().."mB")
-        print("Flow Rate: "..turbine.getFlowRate().."mB/t")
-        print("Energy Production: "..turbine.getProductionRate().."FE/t")
-        newLine()
-        print("Turbine Failsafe: work in progress")
-    elseif turbine == nil and turbineStatusTab == true then
-        term.clear()
-        menuBar()
-        paintutils.drawImage(errorimage,1,8)
-        term.setBackgroundColor(colors.lightBlue)
-        term.setCursorPos(1,3)
-        print("Running without turbine integration!")
-        print("Connect turbine to see status!")
-        print("(If this message is printed in error, contact us!)")
-    end
-    sleep(0.1)
+        sleep(0.1)
     end
 end
 
+-- Shuts down the reactor when above 1200K
 local function reactorFailsafe()
     if failsafe ==  true then
         while true do
@@ -144,6 +155,7 @@ local function reactorFailsafe()
     else return end
 end
 
+-- Toggles the reactor
 local function reactorToggle()
     while true do
         local event, key = os.pullEvent("key")
@@ -160,6 +172,7 @@ local function reactorToggle()
     end  
 end
 
+-- Debug stuff
 local function debugFailsafe()
 while true do
     local event,key = os.pullEvent("key")
@@ -172,6 +185,7 @@ while true do
 end
 end
 
+-- Startup code
 term.clear()
 term.setCursorPos(1,1)
 term.setBackgroundColor(colors.cyan) 
@@ -192,4 +206,5 @@ while true do
     end
 end
 
+-- no touchy
 parallel.waitForAll(debugFailsafe,mouseClick,reactorFailsafe,StatusCheck,reactorToggle)
