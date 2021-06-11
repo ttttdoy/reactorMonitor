@@ -1,6 +1,1 @@
-# reactorMonitor
-fission reactor program for mekanism, made with computercraft
-
-since there was nothing out there that did it, we did it :D
-
-Setup Guide: i'll make one eventually:tm:
+Hi! Welcome to my little branch for making everything seem more professional. I do things here like changing messages and colors.
