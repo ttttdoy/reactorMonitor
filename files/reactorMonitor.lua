@@ -97,7 +97,7 @@ local function StatusCheck()
             newLine()
             if reactorFailsafe == true then
                 print("Reactor Failsafe: ACTIVE")
-            else
+            elseif reactorFailsafe == false then
                 print("Reactor Failsafe: INACTIVE")
             end  
         end 
@@ -188,9 +188,9 @@ end
 local function turbineToggle()
         while true do
             local event, key = os.pullEvent("key")
-            if key == keys.e and turbineStatusTab == true and turbineFailsafe == true then
+            if key == keys.f and turbineStatusTab == true and turbineFailsafe == true then
                 turbineFailsafe = false
-            elseif key == keys.e and turbineStatusTab == true and turbineFailsafe == false then
+            elseif key == keys.f and turbineStatusTab == true and turbineFailsafe == false then
                 turbineFailsafe = true
             end
             sleep(0.1)
@@ -217,7 +217,7 @@ term.setCursorPos(1,1)
 term.setBackgroundColor(colors.cyan) 
 textutils.slowPrint("JKR Fission Reactor & Turbine Software",20)
 sleep(0.1) 
-textutils.slowPrint("Developed by Heck (mostly)  & Scorch",20)
+textutils.slowPrint("Developed by Heck & Scorch",20)
 sleep(0.5)
 
 while true do
