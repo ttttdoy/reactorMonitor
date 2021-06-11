@@ -1,4 +1,5 @@
-local failsafe = true
+local reactorFailsafe = true
+local turbineFailsafe = true
 local image = paintutils.loadImage("drawing.nfp")
 local image2 = paintutils.loadImage("turbine.nfp")
 local errorimage = paintutils.loadImage("error.nfp")
@@ -119,7 +120,11 @@ local function StatusCheck()
             print("Flow Rate: "..turbine.getFlowRate().."mB/t")
             print("Energy Production: "..turbine.getProductionRate().."FE/t")
             newLine()
-            print("Turbine Failsafe: work in progress")
+            if turbineFailsafe == true then
+                print("Turbine Failsafe: ACTIVE")
+            else
+                print("Turbine Failsafe: INACTIVE")
+            end
         elseif turbine == nil and turbineStatusTab == true then
             term.clear()
             menuBar()
@@ -136,22 +141,32 @@ end
 
 -- Shuts down the reactor when above 1200K
 local function reactorFailsafe()
-    if failsafe ==  true then
-        while true do
+    while true do
+        if reactorFailsafe ==  true then
             sleep(0.1) 
             if reactor.getTemperature() >= 1200 then
                  reactor.scram()
                  if chatbox ~= nil then
-                    term.setCursorPos(1,18)
-                    print("WARNING: Reactor at critical temps, shutting down")
-                    chatbox.sendMessage("WARNING: Reactor temp at critical levels, shutting down") 
+                    chatbox.sendMessage("WARNING: Reactor temp at critical levels, shutting down")
+                    while true do
+                        if reactorStatusTab == true and reactorFailsafe == true then
+                            term.setCursorPos(1,18)
+                            print("WARNING: Reactor at critical temps, shutting down")
+                            sleep(0.1)
+                        end
+                    end
                  else
-                     term.setCursorPos(1,18)
-                     print("WARNING: Reactor at critical temps, shutting down")
-                 end
-                 break
+                    while true do
+                        if reactorStatusTab == true and reactorFailsafe == true then
+                            term.setCursorPos(1,18)
+                            print("WARNING: Reactor at critical temps, shutting down")
+                            sleep(0.1)
+                        end
+                    end
+                end
             end
         end
+    sleep(0.1)
     else return end
 end
 
@@ -172,17 +187,31 @@ local function reactorToggle()
     end  
 end
 
--- Debug stuff
-local function debugFailsafe()
-while true do
-    local event,key = os.pullEvent("key")
-    if key == keys.leftShift and keys.f then
-        print("debug test")
-        sleep(0.5)
-        break
-    end
-    sleep(0.1)
+-- Turbine controls
+local function turbineToggle()
+        while true do
+            local event, key = os.pullEvent("key")
+            if key == keys.e and turbineStatusTab == true and turbineFailsafe == true then
+                turbineFailsafe = false
+            elseif key == keys.e and turbineStatusTab == true and turbineFailsafe == false then
+                turbineFailsafe = true
+            end
+            sleep(0.1)
+        end
 end
+
+-- Debug stuff
+local function debugFunction()
+    --function testing goes here
+    while true do
+        local event,key = os.pullEvent("key")
+        if key == keys.d and debugMode == true then
+            print("debug test")
+            sleep(0.5)
+            break
+        end
+        sleep(0.1)
+    end
 end
 
 -- Startup code
@@ -207,4 +236,4 @@ while true do
 end
 
 -- no touchy
-parallel.waitForAll(debugFailsafe,mouseClick,reactorFailsafe,StatusCheck,reactorToggle)
+parallel.waitForAll(debugFunction,mouseClick,reactorFailsafe,StatusCheck,reactorToggle,turbineToggle)
