@@ -165,9 +165,9 @@ local function reactorFailsafe()
                     end
                 end
             end
-        end
+        else return end
     sleep(0.1)
-    else return end
+    end
 end
 
 -- Toggles the reactor
