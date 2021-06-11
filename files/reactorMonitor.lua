@@ -175,9 +175,9 @@ local function reactorToggle()
             reactor.scram()
         elseif key == keys.e and reactorStatusTab == true  and reactor.getStatus() == false then
             reactor.activate() 
-        elseif key == keys.f and reactorStatusTab == true and failsafe == true then
+        elseif key == keys.f and reactorStatusTab == true and reactorFailsafe == true then
             failsafe = false
-        elseif key == keys.f and reactorStatusTab == true and failsafe == false then
+        elseif key == keys.f and reactorStatusTab == true and reactorFailsafe == false then
             failsafe = true 
         end
         sleep(0.1) 
