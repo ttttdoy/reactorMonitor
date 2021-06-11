@@ -95,7 +95,7 @@ local function StatusCheck()
             print("E - Toggle Reactor")
             print("F - Toggle Failsafe") 
             newLine()
-            if failsafe == true then
+            if reactorFailsafe == true then
                 print("Reactor Failsafe: ACTIVE")
             else
                 print("Reactor Failsafe: INACTIVE")
