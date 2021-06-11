@@ -171,15 +171,15 @@ end
 local function reactorToggle()
     while true do
         local event, key = os.pullEvent("key")
-        if key == keys.e and reactorStatusTab == true and reactor.getStatus() == true then
-            reactor.scram()
-        elseif key == keys.e and reactorStatusTab == true  and reactor.getStatus() == false then
-            reactor.activate() 
-        elseif key == keys.f and reactorStatusTab == true and reactorFailsafe == true then
-            reactorFailsafe = false
-        elseif key == keys.f and reactorStatusTab == true and reactorFailsafe == false then
-            reactorFailsafe = true 
-        end
+            if key == keys.e and reactorStatusTab == true and reactor.getStatus() == true then
+                reactor.scram()
+            elseif key == keys.e and reactorStatusTab == true  and reactor.getStatus() == false then
+                reactor.activate() 
+            elseif key == keys.f and reactorStatusTab == true and reactorFailsafe == true then
+                reactorFailsafe = false
+            elseif key == keys.f and reactorStatusTab == true and reactorFailsafe == false then
+                reactorFailsafe = true 
+            end
         sleep(0.1) 
     end  
 end
@@ -188,11 +188,11 @@ end
 local function turbineToggle()
         while true do
             local event, key = os.pullEvent("key")
-            if key == keys.f and turbineStatusTab == true and turbineFailsafe == true then
-                turbineFailsafe = false
-            elseif key == keys.f and turbineStatusTab == true and turbineFailsafe == false then
-                turbineFailsafe = true
-            end
+                if key == keys.f and turbineStatusTab == true and turbineFailsafe == true then
+                    turbineFailsafe = false
+                elseif key == keys.f and turbineStatusTab == true and turbineFailsafe == false then
+                    turbineFailsafe = true
+                end
             sleep(0.1)
         end
 end
