@@ -193,7 +193,7 @@ term.setCursorPos(1,1)
 term.setBackgroundColor(colors.cyan) 
 textutils.slowPrint("JKR Fission Reactor & Turbine Software",20)
 sleep(0.1) 
-textutils.slowPrint("Developed by Heck (mostly)  & Scorch",20)
+textutils.slowPrint("Developed by Heck (mostly) & Scorch",20)
 sleep(0.5)
 
 while true do
