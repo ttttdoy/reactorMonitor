@@ -140,7 +140,7 @@ local function StatusCheck()
 end
 
 -- Shuts down the reactor when above 1200K
-local function reactorFailsafe()
+local function reactorFailsafeToggle()
     while true do 
         if reactor.getTemperature() >= 1200 and reactorFailsafe == true then
             reactor.scram()
@@ -233,4 +233,4 @@ while true do
 end
 
 -- no touchy
-parallel.waitForAll(debugFunction,mouseClick,reactorFailsafe,StatusCheck,reactorToggle,turbineToggle)
+parallel.waitForAll(debugFunction,mouseClick,reactorFailsafeToggle,StatusCheck,reactorToggle,turbineToggle)
