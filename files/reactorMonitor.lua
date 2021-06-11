@@ -1,10 +1,10 @@
-local reactorFailsafe = true
-local turbineFailsafe = true
 local image = paintutils.loadImage("drawing.nfp")
 local image2 = paintutils.loadImage("turbine.nfp")
 local errorimage = paintutils.loadImage("error.nfp")
 local reactorStatusTab = true
 local turbineStatusTab = false
+local reactorFailsafe = true
+local turbineFailsafe = true
 local debugMode = false
 
 -- Turbine Detection
@@ -97,7 +97,7 @@ local function StatusCheck()
             newLine()
             if reactorFailsafe == true then
                 print("Reactor Failsafe: ACTIVE")
-            else
+            elseif reactorFailsafe == false then
                 print("Reactor Failsafe: INACTIVE")
             end  
         end 
