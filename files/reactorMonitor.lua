@@ -60,6 +60,10 @@ function mouseClick()
                 failsafe = false
             elseif y == 11 and x >= 1 and x<= 7 and reactorStatusTab == true and failsafe == false then
                 failsafe = true
+            elseif y == 10 and x >= 1 and x<= 7 and turbineStatusTab == true and turbineFailsafe == false then
+                turbineFailsafe = true
+            elseif y == 10 and x >= 1 and x<= 7 and turbineStatusTab == true and turbineFailsafe == true then
+                turbineFailsafe = false
             end
         end
         sleep(0.1)
@@ -130,8 +134,11 @@ local function StatusCheck()
             end
             print("Steam Capacity: "..turbine.getSteamCapacity().."mB")
             print("Current Steam: "..turbine.getSteam().."mB")
+            print("Steam Filled Percentage: "..math.floor(math.abs(turbine.getSteamFilledPercentage() * 100)).."%")
             print("Flow Rate: "..turbine.getFlowRate().."mB/t")
             print("Energy Production: "..turbine.getProductionRate().."FE/t")
+            newLine()
+            print("[Click] or F - Toggle Failsafe")
             newLine()
             if turbineFailsafe == true then
                 print("Turbine Failsafe: ACTIVE")
@@ -175,6 +182,33 @@ local function reactorFailsafeToggle()
                    end
                end
            end
+        else return end
+        sleep(0.1)
+    end
+end
+
+-- Shuts down the reactor when steam in the turbine backs up
+local function turbineFailsafeToggle()
+    while true do
+        if turbineFailsafe == true then
+            if turbine.getSteamFilledPercentage() >= 90 then
+                if chatbox ~= nil then
+                    reactor.scram()
+                    chatbox.sendMessage("WARNING: Turbine at dangerous steam levels, shutting down reactor to prevent buildup")
+                    while true do
+                        term.setCursorPos(1,18)
+                        print("WARNING: Turbine at dangerous steam levels, shutting down reactor to prevent buildup")
+                        sleep(0.1)
+                    end
+                else
+                    reactor.scram()
+                    while true do
+                        term.setCursorPos(1,18)
+                        print("WARNING: Turbine at dangerous steam levels, shutting down reactor to prevent buildup")
+                        sleep(0.1)
+                    end
+                end
+            end
         else return end
         sleep(0.1)
     end
@@ -246,4 +280,4 @@ while true do
 end
 
 -- no touchy
-parallel.waitForAll(debugFunction,mouseClick,reactorFailsafeToggle,StatusCheck,reactorToggle,turbineToggle)
+parallel.waitForAll(debugFunction,mouseClick,reactorFailsafeToggle,StatusCheck,reactorToggle,turbineToggle,turbineFailsafeToggle)
