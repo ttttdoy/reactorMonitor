@@ -191,7 +191,7 @@ end
 local function turbineFailsafeToggle()
     while true do
         if turbineFailsafe == true then
-            if turbine.getSteamFilledPercentage() >= 90 then
+            if turbine.getSteam() >= turbine.getSteamCapacity() then
                 if chatbox ~= nil then
                     reactor.scram()
                     chatbox.sendMessage("WARNING: Turbine at dangerous steam levels, shutting down reactor to prevent buildup")
