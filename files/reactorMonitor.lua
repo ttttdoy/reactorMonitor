@@ -3,7 +3,7 @@ local image2 = paintutils.loadImage("turbine.nfp")
 local errorimage = paintutils.loadImage("error.nfp")
 local reactorStatusTab = true
 local turbineStatusTab = false
-local reactorFailsafe = true
+local failsafe = true
 local turbineFailsafe = true
 local debugMode = false
 
@@ -95,9 +95,9 @@ local function StatusCheck()
             print("E - Toggle Reactor")
             print("F - Toggle Failsafe") 
             newLine()
-            if reactorFailsafe == true then
+            if failsafe == true then
                 print("Reactor Failsafe: ACTIVE")
-            elseif reactorFailsafe == false then
+            elseif failsafe == false then
                 print("Reactor Failsafe: INACTIVE")
             end  
         end 
@@ -142,12 +142,12 @@ end
 -- Shuts down the reactor when above 1200K
 local function reactorFailsafeToggle()
     while true do 
-        if reactor.getTemperature() >= 1200 and reactorFailsafe == true then
+        if reactor.getTemperature() >= 1200 and failsafe == true then
             reactor.scram()
             if chatbox ~= nil then
                chatbox.sendMessage("WARNING: Reactor temp at critical levels, shutting down")
                while true do
-                   if reactorStatusTab == true and reactorFailsafe == true then
+                   if reactorStatusTab == true and failsafe == true then
                        term.setCursorPos(1,18)
                        print("WARNING: Reactor at critical temps, shutting down")
                        sleep(0.1)
@@ -155,7 +155,7 @@ local function reactorFailsafeToggle()
                end
             else
                while true do
-                   if reactorStatusTab == true and reactorFailsafe == true then
+                   if reactorStatusTab == true and failsafe == true then
                        term.setCursorPos(1,18)
                        print("WARNING: Reactor at critical temps, shutting down")
                        sleep(0.1)
@@ -175,10 +175,10 @@ local function reactorToggle()
                 reactor.scram()
             elseif key == keys.e and reactorStatusTab == true  and reactor.getStatus() == false then
                 reactor.activate() 
-            elseif key == keys.f and reactorStatusTab == true and reactorFailsafe == true then
-                reactorFailsafe = false
-            elseif key == keys.f and reactorStatusTab == true and reactorFailsafe == false then
-                reactorFailsafe = true 
+            elseif key == keys.f and reactorStatusTab == true and failsafe == true then
+                failsafe = false
+            elseif key == keys.f and reactorStatusTab == true and failsafe == false then
+                failsafe = true 
             end
         sleep(0.1) 
     end  
