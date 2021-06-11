@@ -1,3 +1,8 @@
+-- REACTOR CONTROL AND TURBINE MONITORING PROGRAM --
+-- PROGRAMMED BY AyScorch and Heck --
+
+
+-- locals
 local image = paintutils.loadImage("drawing.nfp")
 local image2 = paintutils.loadImage("turbine.nfp")
 local errorimage = paintutils.loadImage("error.nfp")
@@ -36,17 +41,25 @@ function newLine()
     term.setCursorPos(1,(yPos + 1))
 end
 
--- Mouse clicking routine (currently only switches between tabs)
+-- Mouse clicking routine (switch between tabs and toggle functions)
 function mouseClick()
     while true do
         local event,button,x,y = os.pullEvent("mouse_click")
         if button == 1 then
-            if y == 1 and x>=1 and x<=9 then
+            if y == 1 and x>=1 and x<=9 then -- reactor tab
             reactorStatusTab = true 
             turbineStatusTab = false
-            elseif y == 1 and x>=11 and x<=19 then
+            elseif y == 1 and x>=11 and x<=19 then -- turbine tab
             turbineStatusTab = true
             reactorStatusTab = false
+            elseif y == 10 and x >= 1 and x<= 7 and reactorStatusTab == true and reactor.getStatus() == true then
+                reactor.scram()
+            elseif y == 10 and x >= 1 and x<= 7 and reactorStatusTab == true and reactor.getStatus() == false then
+                reactor.activate()
+            elseif y == 11 and x >= 1 and x<= 7 and reactorStatusTab == true and failsafe == true then
+                failsafe = false
+            elseif y == 11 and x >= 1 and x<= 7 and reactorStatusTab == true and failsafe == false then
+                failsafe = true
             end
         end
         sleep(0.1)
@@ -92,8 +105,8 @@ local function StatusCheck()
             print("Heating Rate: "..reactor.getHeatingRate().." mB/t" )
             print("Coolant Level: "..math.floor(math.abs(reactor.getCoolantFilledPercentage() * 100)).."%") 
             newLine() 
-            print("E - Toggle Reactor")
-            print("F - Toggle Failsafe") 
+            print("[Click] or E - Toggle Reactor")
+            print("[Click] or F - Toggle Failsafe") 
             newLine()
             if failsafe == true then
                 print("Reactor Failsafe: ACTIVE")
