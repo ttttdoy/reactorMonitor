@@ -98,7 +98,7 @@ local function failsafeTrigger()
                chatbox.sendMessage("WARNING: Reactor temp at critical levels, shutting down")
            end
         else return end
-        if turbine.getSteam() >= turbine.getSteamCapacity() and turbine ~= nil and turbineFailsafe == true failsafeTriggered == false then
+        if turbine.getSteam() >= turbine.getSteamCapacity() and turbine ~= nil and turbineFailsafe == true and failsafeTriggered == false then
             reactor.scram()
             failsafeTriggered = true
             if chatbox ~= nil then
