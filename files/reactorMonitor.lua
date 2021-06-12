@@ -41,13 +41,13 @@ else
 end
 
 -- Adds a blank line
-function newLine()
+local function newLine()
     xPos, yPos = term.getCursorPos()
     term.setCursorPos(1,(yPos + 1))
 end
 
 -- Mouse clicking routine (switch between tabs and toggle functions)
-function mouseClick()
+local function mouseClick()
     while true do
         local event,button,x,y = os.pullEvent("mouse_click")
         if button == 1 then
@@ -93,6 +93,7 @@ local function menuBar()
     print("[Reactor] [Turbine] [Etc..]")
 end
 
+-- failsafe triggers to stop the reactor going no
 local function failsafeTrigger()
     while true do
         if reactor.getTemperature() >= 1200 and failsafe == true then
@@ -111,6 +112,13 @@ local function failsafeTrigger()
         end
         sleep(0.1)
     end
+end
+
+-- unfailsafes the trigger
+local function unFailsafeTrigger()
+    sleep(60)
+    failsafeTriggeredReactor = false
+    failsafeTriggeredTurbine = false
 end
 
 -- Prints the status of both the reactor and turbine
@@ -145,9 +153,11 @@ local function StatusCheck()
             if failsafeTriggeredReactor == true then
                 term.setCursorPos(1,18)
                 print("FAILSAFE TRIGGERED: REACTOR TEMP")
+                unFailsafeTrigger()
             elseif failsafeTriggeredTurbine == true then
                 term.setCursorPos(1,18)
                 print("FAILSAFE TRIGGERED: TURBINE OVERFLOW")
+                unFailsafeTrigger()
             end
         end 
         -- Turbine Tab Info
@@ -180,9 +190,11 @@ local function StatusCheck()
             if failsafeTriggeredTurbine == true then
                 term.setCursorPos(1,18)
                 print("FAILSAFE TRIGGERED: TURBINE OVERFLOW")
+                unFailsafeTrigger()
             elseif failsafeTriggeredReactor == true then
                 term.setCursorPos(1,18)
                 print("FAILSAFE TRIGGERED: REACTOR TEMP")
+                unFailsafeTrigger()
             end
         elseif turbine == nil and turbineStatusTab == true then
             term.clear()
