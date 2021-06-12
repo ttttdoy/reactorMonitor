@@ -138,7 +138,6 @@ local function StatusCheck()
             elseif failsafe == false then
                 print("Reactor Failsafe: INACTIVE")
             end  
-            failsafeTrigger()
             if failsafeTriggered == true then
                 term.setCursorPos(1,18)
                 print("FAILSAFE TRIGGERED: REACTOR TEMP")
@@ -171,7 +170,6 @@ local function StatusCheck()
             else
                 print("Turbine Failsafe: INACTIVE")
             end
-            failsafeTrigger()
             if failsafeTriggered == true then
                 term.setCursorPos(1,18)
                 print("FAILSAFE TRIGGERED: TURBINE OVERFLOW")
