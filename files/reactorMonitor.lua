@@ -12,6 +12,7 @@ local failsafe = true
 local turbineFailsafe = true
 local failsafeTriggered = false
 local debugMode = false
+local turbine
 
 -- Turbine Detection
 if peripheral.find("peripheralProxy:turbine") ~= nil then
