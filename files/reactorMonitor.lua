@@ -16,7 +16,6 @@ local debugMode = false
 -- Turbine Detection
 if peripheral.find("peripheralProxy:turbine") ~= nil then
     turbine = peripheral.find("peripheralProxy:turbine")
-    turbineSteamCap = turbine.getSteamCapacity()
 else
     print("Turbine not found, continuing..")
     sleep(1)
@@ -99,7 +98,7 @@ local function failsafeTrigger()
            end
             failsafeTriggered = true
         else end
-        if turbine.getSteam() >= turbineSteamCap or turbine.getSteamCapacity() and turbine ~= nil and turbineFailsafe == true then
+        if turbine.getSteam() >= turbine.getSteamCapacity() and turbine ~= nil and turbineFailsafe == true then
             reactor.scram()
             if chatbox ~= nil and failsafeTriggered == false then
                 chatbox.sendMessage("WARNING: Turbine at dangerous steam levels, shutting down reactor to prevent buildup")
