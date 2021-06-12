@@ -12,11 +12,11 @@ local failsafe = true
 local turbineFailsafe = true
 local failsafeTriggered = false
 local debugMode = false
-local turbineSteamCap = turbine.getSteamCapacity()
 
 -- Turbine Detection
 if peripheral.find("peripheralProxy:turbine") ~= nil then
     turbine = peripheral.find("peripheralProxy:turbine")
+    turbineSteamCap = turbine.getSteamCapacity()
 else
     print("Turbine not found, continuing..")
     sleep(1)
