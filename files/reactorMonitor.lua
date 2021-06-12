@@ -91,19 +91,19 @@ end
 
 local function failsafeTrigger()
     while true do
-        if reactor.getTemperature() >= 1200 and failsafe == true and failsafeTriggered == false then
+        if reactor.getTemperature() >= 1200 and failsafe == true then
             reactor.scram()
-            failsafeTriggered = true
-            if chatbox ~= nil then
+            if chatbox ~= nil and failsafeTriggered == false then
                chatbox.sendMessage("WARNING: Reactor temp at critical levels, shutting down")
            end
-        else return end
-        if turbine.getSteam() >= turbine.getSteamCapacity() and turbine ~= nil and turbineFailsafe == true and failsafeTriggered == false then
-            reactor.scram()
             failsafeTriggered = true
-            if chatbox ~= nil then
+        else return end
+        if turbine.getSteam() >= turbine.getSteamCapacity() and turbine ~= nil and turbineFailsafe == true then
+            reactor.scram()
+            if chatbox ~= nil and failsafeTriggered == false then
                 chatbox.sendMessage("WARNING: Turbine at dangerous steam levels, shutting down reactor to prevent buildup")
             end
+            failsafeTriggered = true
         else return end
         sleep(0.1)
     end
