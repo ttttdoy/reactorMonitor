@@ -10,9 +10,12 @@ local reactorStatusTab = true
 local turbineStatusTab = false
 local failsafe = true
 local turbineFailsafe = true
-local failsafeTriggered = false
+local failsafeTriggeredTurbine = false
+local failsafeTriggeredReactor = false
 local debugMode = false
 local turbine
+local chatbox
+local reactor
 
 -- Turbine Detection
 if peripheral.find("peripheralProxy:turbine") ~= nil then
@@ -94,17 +97,17 @@ local function failsafeTrigger()
     while true do
         if reactor.getTemperature() >= 1200 and failsafe == true then
             reactor.scram()
-            if chatbox ~= nil and failsafeTriggered == false then
+            if chatbox ~= nil and failsafeTriggeredReactor == false then
                chatbox.sendMessage("WARNING: Reactor temp at critical levels, shutting down")
            end
-            failsafeTriggered = true
+            failsafeTriggeredReactor = true
         end
         if turbine.getSteam() >= turbine.getSteamCapacity() and turbine ~= nil and turbineFailsafe == true then
             reactor.scram()
-            if chatbox ~= nil and failsafeTriggered == false then
+            if chatbox ~= nil and failsafeTriggeredTurbine == false then
                 chatbox.sendMessage("WARNING: Turbine at dangerous steam levels, shutting down reactor to prevent buildup")
             end
-            failsafeTriggered = true
+            failsafeTriggeredTurbine = true
         end
         sleep(0.1)
     end
@@ -139,9 +142,12 @@ local function StatusCheck()
             elseif failsafe == false then
                 print("Reactor Failsafe: INACTIVE")
             end  
-            if failsafeTriggered == true then
+            if failsafeTriggeredReactor == true then
                 term.setCursorPos(1,18)
                 print("FAILSAFE TRIGGERED: REACTOR TEMP")
+            elseif failsafeTriggeredTurbine == true then
+                term.setCursorPos(1,18)
+                print("FAILSAFE TRIGGERED: TURBINE OVERFLOW")
             end
         end 
         -- Turbine Tab Info
@@ -171,9 +177,12 @@ local function StatusCheck()
             else
                 print("Turbine Failsafe: INACTIVE")
             end
-            if failsafeTriggered == true then
+            if failsafeTriggeredTurbine == true then
                 term.setCursorPos(1,18)
                 print("FAILSAFE TRIGGERED: TURBINE OVERFLOW")
+            elseif failsafeTriggeredReactor == true then
+                term.setCursorPos(1,18)
+                print("FAILSAFE TRIGGERED: REACTOR TEMP")
             end
         elseif turbine == nil and turbineStatusTab == true then
             term.clear()
