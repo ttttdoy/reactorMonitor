@@ -90,26 +90,23 @@ local function menuBar()
 end
 
 local function failsafeTrigger()
-    if reactor.getTemperature() >= 1200 and failsafe == true then
+    while true do
+        if reactor.getTemperature() >= 1200 and failsafe == true and failsafeTriggered == false then
             reactor.scram()
-            term.setCursorPos(1,18)
-            print("FAILSAFE TRIGGERED: REACTOR TEMP")
             failsafeTriggered = true
             if chatbox ~= nil then
                chatbox.sendMessage("WARNING: Reactor temp at critical levels, shutting down")
            end
         else return end
-    if turbineFailsafe == true then
-        if turbine.getSteam() >= turbine.getSteamCapacity() and turbine ~= nil then
+        if turbine.getSteam() >= turbine.getSteamCapacity() and turbine ~= nil and turbineFailsafe == true failsafeTriggered == false then
             reactor.scram()
-            term.setCursorPos(1,18)
-            print("FAILSAFE TRIGGERED: TURBINE OVERFLOW")
             failsafeTriggered = true
             if chatbox ~= nil then
                 chatbox.sendMessage("WARNING: Turbine at dangerous steam levels, shutting down reactor to prevent buildup")
             end
-        end
-    else return end
+        else return end
+        sleep(0.1)
+    end
 end
 
 -- Prints the status of both the reactor and turbine
@@ -142,6 +139,10 @@ local function StatusCheck()
                 print("Reactor Failsafe: INACTIVE")
             end  
             failsafeTrigger()
+            if failsafeTriggered == true then
+                term.setCursorPos(1,18)
+                print("FAILSAFE TRIGGERED: REACTOR TEMP")
+            end
         end 
         -- Turbine Tab Info
         if turbineStatusTab == true and turbine ~= nil then
@@ -171,6 +172,10 @@ local function StatusCheck()
                 print("Turbine Failsafe: INACTIVE")
             end
             failsafeTrigger()
+            if failsafeTriggered == true then
+                term.setCursorPos(1,18)
+                print("FAILSAFE TRIGGERED: TURBINE OVERFLOW")
+            end
         elseif turbine == nil and turbineStatusTab == true then
             term.clear()
             menuBar()
@@ -251,4 +256,4 @@ while true do
 end
 
 -- no touchy
-parallel.waitForAll(debugFunction,mouseClick,StatusCheck,reactorToggle,turbineToggle)
+parallel.waitForAll(debugFunction,mouseClick,StatusCheck,reactorToggle,turbineToggle,failsafeTrigger)
