@@ -10,6 +10,7 @@ local reactorStatusTab = true
 local turbineStatusTab = false
 local failsafe = true
 local turbineFailsafe = true
+local failsafeTriggered = false
 local debugMode = false
 
 -- Turbine Detection
@@ -88,6 +89,29 @@ local function menuBar()
     print("[Reactor] [Turbine] [Etc..]")
 end
 
+local function failsafeTrigger()
+    if reactor.getTemperature() >= 1200 and failsafe == true then
+            reactor.scram()
+            term.setCursorPos(1,18)
+            print("FAILSAFE TRIGGERED: REACTOR TEMP")
+            failsafeTriggered = true
+            if chatbox ~= nil then
+               chatbox.sendMessage("WARNING: Reactor temp at critical levels, shutting down")
+           end
+        else return end
+    if turbineFailsafe == true then
+        if turbine.getSteam() >= turbine.getSteamCapacity() and turbine ~= nil then
+            reactor.scram()
+            term.setCursorPos(1,18)
+            print("FAILSAFE TRIGGERED: TURBINE OVERFLOW")
+            failsafeTriggered = true
+            if chatbox ~= nil then
+                chatbox.sendMessage("WARNING: Turbine at dangerous steam levels, shutting down reactor to prevent buildup")
+            end
+        end
+    else return end
+end
+
 -- Prints the status of both the reactor and turbine
 local function StatusCheck()
     while true do
@@ -117,6 +141,7 @@ local function StatusCheck()
             elseif failsafe == false then
                 print("Reactor Failsafe: INACTIVE")
             end  
+            failsafeTrigger()
         end 
         -- Turbine Tab Info
         if turbineStatusTab == true and turbine ~= nil then
@@ -145,6 +170,7 @@ local function StatusCheck()
             else
                 print("Turbine Failsafe: INACTIVE")
             end
+            failsafeTrigger()
         elseif turbine == nil and turbineStatusTab == true then
             term.clear()
             menuBar()
@@ -155,61 +181,6 @@ local function StatusCheck()
             print("Connect turbine to see status!")
             print("(If this message is printed in error, contact us!)")
         end
-        sleep(0.1)
-    end
-end
-
--- Shuts down the reactor when above 1200K
-local function reactorFailsafeToggle()
-    while true do 
-        if reactor.getTemperature() >= 1200 and failsafe == true then
-            reactor.scram()
-            if chatbox ~= nil then
-               chatbox.sendMessage("WARNING: Reactor temp at critical levels, shutting down")
-               while true do
-                   if reactorStatusTab == true and failsafe == true then
-                       term.setCursorPos(1,18)
-                       print("WARNING: Reactor at critical temps, shutting down")
-                       sleep(0.1)
-                   end
-               end
-            else
-               while true do
-                   if reactorStatusTab == true and failsafe == true then
-                       term.setCursorPos(1,18)
-                       print("WARNING: Reactor at critical temps, shutting down")
-                       sleep(0.1)
-                   end
-               end
-           end
-        else return end
-        sleep(0.1)
-    end
-end
-
--- Shuts down the reactor when steam in the turbine backs up
-local function turbineFailsafeToggle()
-    while true do
-        if turbineFailsafe == true then
-            if turbine.getSteam() >= turbine.getSteamCapacity() then
-                if chatbox ~= nil then
-                    reactor.scram()
-                    chatbox.sendMessage("WARNING: Turbine at dangerous steam levels, shutting down reactor to prevent buildup")
-                    while true do
-                        term.setCursorPos(1,18)
-                        print("WARNING: Turbine at dangerous steam levels, shutting down reactor to prevent buildup")
-                        sleep(0.1)
-                    end
-                else
-                    reactor.scram()
-                    while true do
-                        term.setCursorPos(1,18)
-                        print("WARNING: Turbine at dangerous steam levels, shutting down reactor to prevent buildup")
-                        sleep(0.1)
-                    end
-                end
-            end
-        else return end
         sleep(0.1)
     end
 end
@@ -280,4 +251,4 @@ while true do
 end
 
 -- no touchy
-parallel.waitForAll(debugFunction,mouseClick,reactorFailsafeToggle,StatusCheck,reactorToggle,turbineToggle,turbineFailsafeToggle)
+parallel.waitForAll(debugFunction,mouseClick,StatusCheck,reactorToggle,turbineToggle)
